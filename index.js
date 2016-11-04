@@ -38,6 +38,7 @@ module.exports = function(obj) {
                     if (obj && obj.base && obj.base.length) {
 
                         var found = false;
+                        var exclude = false;
                         var tried = [];
                         obj.base.forEach(function(val){
 
@@ -46,7 +47,15 @@ module.exports = function(obj) {
                             }
                             filepath = app_path+'/'+val+urlPath;
 
-                            if (fs.existsSync(filepath)) {
+                            if (obj.exclude && obj.exclude.length) {
+                                obj.exclude.forEach(function(item){
+                                    if (new RegExp(item).test(matches[i].url)) {
+                                        exclude = true;
+                                    }
+                                })
+                            }
+
+                            if (fs.existsSync(filepath) && !exclude) {
                                 found++;
                                 var b = fs.readFileSync(filepath);
                                 var format = path.extname(filepath).substr(1);
@@ -63,7 +72,7 @@ module.exports = function(obj) {
                         });
 
                         // If we didn't find the resource, log out all the paths we tried.
-                        if (!found) {
+                        if (!found && !exclude) {
                             tried.forEach(function(val){
                                 gutil.log(val);
                             });

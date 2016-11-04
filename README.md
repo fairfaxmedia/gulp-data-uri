@@ -58,11 +58,21 @@ gulp.task('templates', function(){
         base: [
             'src/css'
         ],
+        exclude: [
+            'some-icon.svg'
+        ],
         verbose: true
     }))
     .pipe(gulp.dest('build/css/file.css'));
 });
 ```
+
+###exclude
+
+Type `Array`
+
+RegExps of URLs to exclude from conversion into a data URI.
+
 
 ###verbose
 
